@@ -8,7 +8,7 @@
  *        Version:  1.0
  *        Created:  09/05/2012 02:40:22 AM
  *       Revision:  none
- *       Compiler:  gcc
+ *       Compiler:  clang++
  *
  *         Author:  mgodshall
  *
@@ -22,7 +22,7 @@ class ProcessTable;
 class Scheduler
 {
     public:
-        virtual void run(ProcessTable*) = 0;
+        virtual void run(const ProcessTable&) = 0;
 };
 
 #endif
