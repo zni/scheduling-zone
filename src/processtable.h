@@ -8,7 +8,7 @@
  *        Version:  1.0
  *        Created:  09/05/2012 12:31:39 AM
  *       Revision:  none
- *       Compiler:  clang
+ *       Compiler:  clang++
  *
  *         Author:  mgodshall
  *
@@ -26,14 +26,21 @@ class ProcessTable
         ProcessTable(const int &numberOfProcs);
         ~ProcessTable();
 
+        struct ProcStats {
+            int complete;
+            int incomplete;
+            double avgTime;
+        };
+
         Process* findPid(const int &pid) const;
         void dump() const;
         std::vector<Process*> table() const;
         int size() const;
-        void stats() const;
+        ProcessTable::ProcStats stats();
 
     private:
         std::vector<Process*> m_table;
+        ProcessTable::ProcStats m_stats;
 
 };
 #endif

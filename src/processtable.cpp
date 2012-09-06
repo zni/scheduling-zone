@@ -8,7 +8,7 @@
  *        Version:  1.0
  *        Created:  09/05/2012 12:55:11 AM
  *       Revision:  none
- *       Compiler:  clang
+ *       Compiler:  clang++
  *
  *         Author:  mgodshall
  *
@@ -28,13 +28,18 @@ ProcessTable::ProcessTable(const int &numberOfProcs)
     srand(time(NULL));
 
     m_table.reserve(numberOfProcs);
+    m_stats.complete = 0;
+    m_stats.incomplete = 0;
+    m_stats.avgTime = 0.0;
     
     /* Initialize process table */
     for (int i = 0; i < numberOfProcs; ++i) {
-        ptime = rand();
-        m_table[i] = new Process(i + 1, ptime % 500);
+        ptime = rand() % 500;
+        m_table[i] = new Process(i + 1, ptime);
+        m_stats.avgTime += ptime;
     }
 
+    m_stats.avgTime = m_stats.avgTime / numberOfProcs;
 }
 
 
@@ -50,7 +55,7 @@ ProcessTable::~ProcessTable()
 Process* ProcessTable::findPid(const int &pid) const
 {
     if (pid > 0 && pid <= m_table.size())
-        return m_table[pid];
+        return m_table[pid - 1];
 
     return NULL;
 }
@@ -74,7 +79,14 @@ int ProcessTable::size() const
 }
 
 
-void ProcessTable::stats() const
+ProcessTable::ProcStats ProcessTable::stats()
 {
+    for (int i = 0; i < m_table.size(); ++i) {
+        if (m_table[i]->ptime() == 0)
+            ++m_stats.complete;
+        else
+            ++m_stats.incomplete;
+    }
 
+    return m_stats;
 }
