@@ -8,7 +8,7 @@
  *        Version:  1.0
  *        Created:  09/05/2012 01:43:19 AM
  *       Revision:  none
- *       Compiler:  gcc
+ *       Compiler:  clang++
  *
  *         Author:  mgodshall
  *
@@ -32,13 +32,13 @@ int Process::pid() const
 }
 
 
-char Process:priority() const
+char Process::priority() const
 {
     return m_priority;
 }
 
 
-void Process:setPriority(const char &priority)
+void Process::setPriority(const char &priority)
 {
     m_priority = priority;
 }
