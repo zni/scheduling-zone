@@ -27,6 +27,7 @@ class RoundRobin : public Scheduler
 {
     public:
         RoundRobin();
+        RoundRobin(const int &quantum);
         ~RoundRobin();
 
         void run(const ProcessTable &ptable);

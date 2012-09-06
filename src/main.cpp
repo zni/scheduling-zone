@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 {
     ProcessTable ptable(100);
     ProcessTable::ProcStats procStats;
-    RoundRobin sched;
+    RoundRobin sched(50);
 
     std::cout << "running scheduler..." << std::endl;
     sched.run(ptable);

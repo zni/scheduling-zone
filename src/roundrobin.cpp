@@ -28,6 +28,12 @@ RoundRobin::RoundRobin()
 { }
 
 
+RoundRobin::RoundRobin(const int &quantum)
+    : m_queue(),
+      m_quantum(quantum)
+{ }
+
+
 RoundRobin::~RoundRobin()
 { }
 
@@ -36,6 +42,7 @@ void RoundRobin::run(const ProcessTable &ptable)
 {
     struct timespec burst;
     int cpuBurst = 10; // 10 milliseconds
+    int cycles = m_quantum / cpuBurst;
 
     burst.tv_sec = 0;
     burst.tv_nsec = cpuBurst * 1000000L;
@@ -49,7 +56,7 @@ void RoundRobin::run(const ProcessTable &ptable)
     for (int j = 1; j < ptable.size(); ++j) {
         m_queue.push(ptable.findPid(j));
         proc = m_queue.front();
-        for (int i = 0; i < cpuBurst; ++i) {
+        for (int i = 0; i < cycles; ++i) {
             if (proc->ptime() == 0)
                 break;
             nanosleep(&burst, (struct timespec*) NULL);
