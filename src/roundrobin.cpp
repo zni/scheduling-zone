@@ -23,12 +23,6 @@
 #include "roundrobin.h"
 
 
-RoundRobin::RoundRobin()
-    : m_queue(),
-      m_quantum(100)
-{ }
-
-
 RoundRobin::RoundRobin(const int &quantum)
     : m_queue(),
       m_quantum(quantum)
