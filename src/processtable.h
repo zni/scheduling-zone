@@ -8,7 +8,7 @@
  *        Version:  1.0
  *        Created:  09/05/2012 12:31:39 AM
  *       Revision:  none
- *       Compiler:  clang++
+ *       Compiler:  g++
  *
  *         Author:  mgodshall
  *
