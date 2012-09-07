@@ -8,7 +8,7 @@
  *        Version:  1.0
  *        Created:  09/05/2012 08:10:15 PM
  *       Revision:  none
- *       Compiler:  clang++
+ *       Compiler:  g++
  *
  *         Author:  mgodshall
  *
@@ -30,7 +30,7 @@ class RoundRobin : public Scheduler
         RoundRobin(const int &quantum);
         ~RoundRobin();
 
-        void run(const ProcessTable &ptable);
+        void run(const ProcessTable &ptable, const int &runningTime = 5000);
 
     private:
         std::queue<Process*> m_queue;

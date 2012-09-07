@@ -8,7 +8,7 @@
  *        Version:  1.0
  *        Created:  09/05/2012 08:02:57 PM
  *       Revision:  none
- *       Compiler:  clang++
+ *       Compiler:  g++
  *
  *         Author:  mgodshall 
  *
@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <chrono>
 #include "process.h"
 #include "processtable.h"
 #include "roundrobin.h"
@@ -38,24 +39,39 @@ RoundRobin::~RoundRobin()
 { }
 
 
-void RoundRobin::run(const ProcessTable &ptable)
+void RoundRobin::run(const ProcessTable &ptable, const int &runningTime)
 {
+    /*
+     * Assume CPU bursts of 10ms. In doing this we can simulate blocking and 
+     * process switch if we've finished processing something before our quantum
+     * expires.
+     */
     struct timespec burst;
-    int cpuBurst = 10; // 10 milliseconds
+    int cpuBurst = 10;
     int cycles = m_quantum / cpuBurst;
-
     burst.tv_sec = 0;
     burst.tv_nsec = cpuBurst * 1000000L;
 
-    /*
-        Simulate CPU bursts of 10ms. In doing this we can simulate a block and 
-        process switch if we've finished processing something before our quantum
-        of 100ms expires.
-    */
     Process *proc;
-    for (int j = 1; j < ptable.size(); ++j) {
-        m_queue.push(ptable.findPid(j));
-        proc = m_queue.front();
+    int pid = 1;
+    int numProcs = ptable.size() + 1;
+
+    std::chrono::duration<int, std::milli> limit(runningTime);
+    auto start = std::chrono::high_resolution_clock::now();
+    auto now = start;
+    do {
+        // Start a process.
+        if (pid < numProcs) {
+            m_queue.push(ptable.findPid(pid));
+            ++pid;
+        }
+
+        if (!m_queue.empty()) {
+            proc = m_queue.front();
+        } else {
+            break;
+        }
+
         for (int i = 0; i < cycles; ++i) {
             if (proc->ptime() == 0)
                 break;
@@ -69,5 +85,7 @@ void RoundRobin::run(const ProcessTable &ptable)
             m_queue.push(m_queue.front());
             m_queue.pop();
         }
-    }
+        now = std::chrono::high_resolution_clock::now(); 
+    } while ((now - start) < limit);
 }
+
