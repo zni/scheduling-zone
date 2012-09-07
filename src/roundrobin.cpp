@@ -62,9 +62,12 @@ void RoundRobin::run(const ProcessTable &ptable, const int &runningTime)
 
         if (!m_queue.empty()) {
             proc = m_queue.front();
+            m_queue.pop();
         } else {
             break;
         }
+
+        std::cout << "now processing pid " << proc->pid() << "..." << std::endl;
 
         for (int i = 0; i < cycles; ++i) {
             if (proc->ptime() == 0)
@@ -73,12 +76,9 @@ void RoundRobin::run(const ProcessTable &ptable, const int &runningTime)
             proc->run(cpuBurst);
         }
 
-        if (proc->ptime() == 0) {
-            m_queue.pop();
-        } else {
-            m_queue.push(m_queue.front());
-            m_queue.pop();
-        }
+        if (proc->ptime() != 0)
+            m_queue.push(proc);
+
         now = std::chrono::high_resolution_clock::now(); 
     } while ((now - start) < limit);
 }
