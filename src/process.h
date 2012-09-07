@@ -20,20 +20,28 @@
 class Process
 {
     public:
-        Process(const int &pid, const int &ptime);
+        Process(const int &pid, const int &ptime, const int &priority = 0);
         ~Process();
 
         int pid() const;
-        char priority() const;
+        int priority() const;
         int ptime() const;
         void run(const int &time);
+        bool scheduled() const;
 
-        void setPriority(const char&);
+        void setPriority(const int &priority);
+
+        friend bool operator> (Process &p, Process &q);
+        friend bool operator<= (Process &p, Process &q);
+
+        friend bool operator< (Process &p, Process &q);
+        friend bool operator>= (Process &p, Process &q);
 
     private:
         int m_pid;
         int m_ptime;
-        char m_priority;
+        int m_priority;
+        bool m_scheduled;
 };
 #endif
 

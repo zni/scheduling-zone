@@ -17,9 +17,11 @@
 
 #include "process.h"
 
-Process::Process(const int &pid, const int &ptime)
+Process::Process(const int &pid, const int &ptime, const int &priority)
     : m_pid(pid),
-      m_ptime(ptime)
+      m_ptime(ptime),
+      m_priority(priority),
+      m_scheduled(false)
 { }
 
 
@@ -32,13 +34,13 @@ int Process::pid() const
 }
 
 
-char Process::priority() const
+int Process::priority() const
 {
     return m_priority;
 }
 
 
-void Process::setPriority(const char &priority)
+void Process::setPriority(const int &priority)
 {
     m_priority = priority;
 }
@@ -52,8 +54,42 @@ int Process::ptime() const
 
 void Process::run(const int &time)
 {
+    if (!m_scheduled)
+        m_scheduled = true;
+
     if ((this->m_ptime - time) < 0)
         this->m_ptime = 0;
     else 
         this->m_ptime -= time;
 }
+
+
+bool Process::scheduled() const
+{
+    return m_scheduled;
+}
+
+
+bool operator> (Process &p, Process &q)
+{
+    return p.m_priority > q.m_priority;
+}
+
+
+bool operator<= (Process &p, Process &q)
+{
+    return p.m_priority <= q.m_priority;
+}
+
+
+bool operator< (Process &p, Process &q)
+{
+    return p.m_priority < q.m_priority;
+}
+
+
+bool operator>= (Process &p, Process &q)
+{
+    return p.m_priority >= q.m_priority;
+}
+
