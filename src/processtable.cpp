@@ -33,10 +33,12 @@ ProcessTable::ProcessTable(const int &numberOfProcs,
     
     /* Initialize process table */
     int ptime;
+    int priority;
     srand(time(NULL));
     for (int i = 0; i < numberOfProcs; ++i) {
         ptime = rand() % maxExecutionTime;
-        m_table[i] = new Process(i + 1, ptime);
+        priority = rand() % 20;
+        m_table[i] = new Process(i + 1, ptime, priority);
         m_stats.avgTime += ptime;
     }
 
@@ -68,6 +70,7 @@ void ProcessTable::dump() const
     for (int i = 0; i < m_table.size(); ++i) {
         std::cout << "process" << std::endl;
         std::cout << "\tpid: " << m_table[i]->pid() << std::endl;
+        std::cout << "\tpriority: " << m_table[i]->priority() << std::endl;
         std::cout << "\tptime: " << m_table[i]->ptime() << std::endl;
         std::cout << std::endl;
     }
