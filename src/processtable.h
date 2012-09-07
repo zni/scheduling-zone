@@ -23,12 +23,13 @@ class Process;
 class ProcessTable
 {
     public:
-        ProcessTable(const int &numberOfProcs);
+        ProcessTable(const int &numberOfProcs, const int &maxExecutionTime = 500);
         ~ProcessTable();
 
         struct ProcStats {
             int complete;
             int incomplete;
+            int scheduled;
             double avgTime;
         };
 

@@ -21,20 +21,21 @@
 #include "processtable.h"
 #include "process.h"
 
-ProcessTable::ProcessTable(const int &numberOfProcs)
+ProcessTable::ProcessTable(const int &numberOfProcs,
+                           const int &maxExecutionTime)
     : m_table(numberOfProcs)
 {
-    int ptime;
-    srand(time(NULL));
-
     m_table.reserve(numberOfProcs);
+    m_stats.scheduled = 0;
     m_stats.complete = 0;
     m_stats.incomplete = 0;
     m_stats.avgTime = 0.0;
     
     /* Initialize process table */
+    int ptime;
+    srand(time(NULL));
     for (int i = 0; i < numberOfProcs; ++i) {
-        ptime = rand() % 500;
+        ptime = rand() % maxExecutionTime;
         m_table[i] = new Process(i + 1, ptime);
         m_stats.avgTime += ptime;
     }
@@ -86,6 +87,9 @@ ProcessTable::ProcStats ProcessTable::stats()
             ++m_stats.complete;
         else
             ++m_stats.incomplete;
+
+        if (m_table[i]->scheduled())
+            ++m_stats.scheduled;
     }
 
     return m_stats;
